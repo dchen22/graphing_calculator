@@ -8,23 +8,18 @@ public class MathExpression {
     private double value; // stores value of this expression
 
     public MathExpression(String stringExpression) {
-        this.stringExpression = stringExpression;
+        this.stringExpression = UTIL.b_to_p(stringExpression);
         this.value = evaluate();
     }
     public MathExpression(String stringExpression, String vars) {
-        this.stringExpression = stringExpression;
-        vars = vars.replace("\\s+",""); // get rid of spaces
-        String[] varList = vars.split("[=,]"); // left with an array [var1, val1, var2, val2, ... ]
-        for (int i = 0; i < varList.length - 1; i+=2) {
-            String var_i_stringValue = varList[i+1]; // corresponding value for variable i
-            if (var_i_stringValue.isEmpty()) {
-                var_i_stringValue = "0"; // default to 0
-            }
-            this.variables.set(varList[i], Double.parseDouble(var_i_stringValue));
-        }
+        this.stringExpression = UTIL.b_to_p(stringExpression);
+
+        UTIL.evalVarAssign(vars, this.variables);
 
         this.value = evaluate();
     }
+
+
 
     /** evaluate the value of the function
      * set this.value to that value
@@ -63,7 +58,7 @@ public class MathExpression {
     public double getValue() { return this.value; }
 
     public static void main(String[] args) {
-        MathExpression mex = new MathExpression("5+6-(sin(3*x)+7*y)", "x=2,y=7");
+        MathExpression mex = new MathExpression("5+6-(sin(3*x)+7*yd)", "x=2,yd=7");
         System.out.println(mex.getValue());
     }
 
