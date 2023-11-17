@@ -1,0 +1,19 @@
+<component name="libraryTable">
+  <library name="javaluator-3.0.2-javadoc">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../../../../../Javaluator-v3.0.2/javaluator-3.0.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../../../../Javaluator-v3.0.2/javaluator-demo-3.0.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../../../../Javaluator-v3.0.2/javaluator-examples-3.0.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../../../../Javaluator-v3.0.2/original-javaluator-demo-3.0.2.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$PROJECT_DIR$/../../../../../Javaluator-v3.0.2/javaluator-3.0.2-javadoc.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../../../../Javaluator-v3.0.2/javaluator-examples-3.0.2-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/../../../../../Javaluator-v3.0.2/javaluator-3.0.2-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../../../../Javaluator-v3.0.2/javaluator-demo-3.0.2-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../../../../Javaluator-v3.0.2/javaluator-examples-3.0.2-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
