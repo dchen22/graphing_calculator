@@ -11,15 +11,17 @@ import javafx.stage.Stage;
 import java.util.ArrayList;
 
 public class GraphApp extends Application {
-    private Canvas canvas = new Canvas(400, 400); // Set initial size
+    double WIDTH = 600;
+    double HEIGHT = 600;
+    private Canvas canvas = new Canvas(WIDTH, HEIGHT); // Set initial size
     private static ArrayList<DrawableFunction> mathFunctions = new ArrayList<>();
     private DoubleEvaluator evaluator = new DoubleEvaluator(); // evaluator for this expression
     final StaticVariableSet<Double> variables = new StaticVariableSet<>(); // stores static math variables
     private double SCALE_FACTOR = 50; // Initial scale factor
 
     public static void main(String[] args) {
-        mathFunctions.add(new DrawableFunction("sin(x)", Color.BLACK));
-        mathFunctions.add(new DrawableFunction("x^2", Color.RED));
+        mathFunctions.add(new DrawableFunction("sin(x)", Color.BLACK, 3));
+        mathFunctions.add(new DrawableFunction("x^2", Color.RED, 3));
         launch(args);
     }
 
@@ -40,7 +42,7 @@ public class GraphApp extends Application {
         root.getChildren().add(canvas);
 
         // Set up the stage
-        primaryStage.setScene(new Scene(root, 400, 400));
+        primaryStage.setScene(new Scene(root, WIDTH, HEIGHT));
         primaryStage.show();
 
         // Add a listener to handle window resizing
@@ -86,24 +88,46 @@ public class GraphApp extends Application {
         double centerY = height / 2;
 
         // Draw X and Y axes
+        gc.setStroke(Color.BLACK); // black axes
         gc.strokeLine(0, centerY, width, centerY); // X-axis
         gc.strokeLine(centerX, 0, centerX, height); // Y-axis
 
         // Draw points
         for (DrawableFunction df : mathFunctions) {
-            // Color of points
-            gc.setFill(df.getColor());
+            // set some variables so we don't have to keep accessing the DrawableFunction object
+            Color df_color = df.getColor();
             String df_expr = df.getExpr();
+            double df_lineWidth = df.getLineWidth();
+
+            // Color of points
+            gc.setFill(df_color);
+
+            // used for holding current two adjacent points to draw lines from.
+            // we will start with the point immediately outside the range (-width - 1)
+            double lastX = -width - 1;
+
+            // Adjust the lastY calculation to consider scaling factor
+            variables.set("x", lastX / SCALE_FACTOR);
+            double lastY = centerY - evaluator.evaluate(df_expr, variables) * SCALE_FACTOR;
 
             for (int i = (int) (-width); i < (int) (width); i++) {
-                double x_val = (double) i / SCALE_FACTOR;
-                variables.set("x", x_val);
+                double x_val = (double) i / SCALE_FACTOR; // x value
+                variables.set("x", x_val); // set "x" variable to current x value
 
-                double x = centerX + (double) i;
-                double y = centerY - evaluator.evaluate(df_expr, variables) * SCALE_FACTOR;
-                double pointWidth = 6.0;
-                gc.fillOval(x - pointWidth / 2, y - pointWidth / 2, pointWidth, pointWidth);
+                double x = centerX + (double) i; // actual x value when drawn (offset to origin)
+                double y = centerY - evaluator.evaluate(df_expr, variables) * SCALE_FACTOR; // actual y value when drawn (offset to origin)
+
+                // probably don't need these circles anymore
+//                gc.fillOval(x - df_lineWidth / 2, y - df_lineWidth / 2, df_lineWidth, df_lineWidth);
+
+                // draw lines
+                gc.setStroke(df_color);
+                gc.setLineWidth(df_lineWidth);
+                gc.strokeLine(lastX, lastY, x, y);
+                lastX = x;
+                lastY = y;
             }
         }
     }
+
 }
