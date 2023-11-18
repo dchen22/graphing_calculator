@@ -102,30 +102,29 @@ public class GraphApp extends Application {
             // Color of points
             gc.setFill(df_color);
 
-            // used for holding current two adjacent points to draw lines from.
-            // we will start with the point immediately outside the range (-width - 1)
-            double lastX = -width - 1;
+            // when drawing lines, we need a previous point (to the left) to be drawn to current point
+            // we will start with the x coord immediately outside the range (-width - 1)
+            double lastX = -width / 2 - 1;
 
             // Adjust the lastY calculation to consider scaling factor
-            variables.set("x", lastX / SCALE_FACTOR);
-            double lastY = centerY - evaluator.evaluate(df_expr, variables) * SCALE_FACTOR;
+            variables.set("x", lastX / SCALE_FACTOR); // set the x variable to our "previous" x
+            lastX = centerX - width / 2 - 1; // displayed x value (offset to origin (OTO))
+            double lastY = centerY - evaluator.evaluate(df_expr, variables) * SCALE_FACTOR; // calculate the displayed y value (OTO)
 
-            for (int i = (int) (-width); i < (int) (width); i++) {
+            for (int i = (int) (-width / 2); i < (int) (width / 2); i++) {
                 double x_val = (double) i / SCALE_FACTOR; // x value
                 variables.set("x", x_val); // set "x" variable to current x value
 
-                double x = centerX + (double) i; // actual x value when drawn (offset to origin)
-                double y = centerY - evaluator.evaluate(df_expr, variables) * SCALE_FACTOR; // actual y value when drawn (offset to origin)
-
-                // probably don't need these circles anymore
-//                gc.fillOval(x - df_lineWidth / 2, y - df_lineWidth / 2, df_lineWidth, df_lineWidth);
+                double x = centerX + (double) i; // displayed x value (OTO)
+                double y = centerY - evaluator.evaluate(df_expr, variables) * SCALE_FACTOR; // displayed y value OTO
 
                 // draw lines
-                gc.setStroke(df_color);
-                gc.setLineWidth(df_lineWidth);
-                gc.strokeLine(lastX, lastY, x, y);
-                lastX = x;
-                lastY = y;
+                gc.setStroke(df_color); // color of line
+                gc.setLineWidth(df_lineWidth); // width of line
+                gc.strokeLine(lastX, lastY, x, y); // from previous (left) point drawn to current point
+                lastX = x; // now, the current x coord becomes the new "previous" x coord
+                lastY = y; // current y coord becomes new previous y coord
+                // continue to next iteration of loop with new lastX and lastY
             }
         }
     }
