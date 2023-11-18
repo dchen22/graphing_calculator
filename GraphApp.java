@@ -25,11 +25,6 @@ public class GraphApp extends Application {
         launch(args);
     }
 
-    public void launchApp(String[] args) {
-        // Call the launch method on this instance
-        launch(args);
-    }
-
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Graph Application");
