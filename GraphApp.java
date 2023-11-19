@@ -9,6 +9,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import java.util.ArrayList;
+import TRANSFORMATIONS.*;
 
 public class GraphApp extends Application {
     double WIDTH = 600;
@@ -23,7 +24,7 @@ public class GraphApp extends Application {
     public static void main(String[] args) {
         mathFunctions.add(new DrawableFunction("sin(x)", Color.BLACK, 3));
         mathFunctions.add(new DrawableFunction("x^2", Color.RED, 3));
-        transformations.add(LinearTransform.transform("rotate 60 deg"));
+        transformations.add(LinearTransform.transform("rotate pi/4"));
         launch(args);
     }
 
