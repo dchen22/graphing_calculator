@@ -23,9 +23,7 @@ public class GraphApp extends Application {
     public static void main(String[] args) {
         mathFunctions.add(new DrawableFunction("sin(x)", Color.BLACK, 3));
         mathFunctions.add(new DrawableFunction("x^2", Color.RED, 3));
-        transformations.add(new MathMatrix(new double[][]{
-                {1, 0},
-                {0, -1}}));
+        transformations.add(LinearTransform.transform("rotate 60 deg"));
         launch(args);
     }
 
