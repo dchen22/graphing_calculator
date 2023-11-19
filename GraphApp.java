@@ -15,6 +15,7 @@ public class GraphApp extends Application {
     double HEIGHT = 600;
     private Canvas canvas = new Canvas(WIDTH, HEIGHT); // Set initial size
     private static ArrayList<DrawableFunction> mathFunctions = new ArrayList<>();
+    private static ArrayList<MathMatrix> transformations = new ArrayList<>();
     private DoubleEvaluator evaluator = new DoubleEvaluator(); // evaluator for this expression
     final StaticVariableSet<Double> variables = new StaticVariableSet<>(); // stores static math variables
     private double SCALE_FACTOR = 50; // Initial scale factor
@@ -22,6 +23,9 @@ public class GraphApp extends Application {
     public static void main(String[] args) {
         mathFunctions.add(new DrawableFunction("sin(x)", Color.BLACK, 3));
         mathFunctions.add(new DrawableFunction("x^2", Color.RED, 3));
+        transformations.add(new MathMatrix(new double[][]{
+                {1, 0},
+                {0, -1}}));
         launch(args);
     }
 
@@ -103,15 +107,31 @@ public class GraphApp extends Application {
 
             // Adjust the lastY calculation to consider scaling factor
             variables.set("x", lastX / SCALE_FACTOR); // set the x variable to our "previous" x
-            lastX = centerX - width / 2 - 1; // displayed x value (offset to origin (OTO))
-            double lastY = centerY - evaluator.evaluate(df_expr, variables) * SCALE_FACTOR; // calculate the displayed y value (OTO)
+            double lastY = evaluator.evaluate(df_expr, variables) * SCALE_FACTOR; // calculate the raw y value (w/o OTO)
+
+            for (MathMatrix m : transformations) {
+                double[] newPoint = LinearTransform.applyPointTransform(new double[]{lastX, lastY}, m);
+                lastX = newPoint[0];
+                lastY = newPoint[1];
+            }
+
+            lastX = centerX + lastX; // OTO
+            lastY = centerY - lastY; // OTO
 
             for (int i = (int) (-width / 2); i < (int) (width / 2); i++) {
-                double x_val = (double) i / SCALE_FACTOR; // x value
-                variables.set("x", x_val); // set "x" variable to current x value
+                double x = (double) i; // x value
+                variables.set("x", x / SCALE_FACTOR); // set "x" variable to current x value
 
-                double x = centerX + (double) i; // displayed x value (OTO)
-                double y = centerY - evaluator.evaluate(df_expr, variables) * SCALE_FACTOR; // displayed y value OTO
+                double y = evaluator.evaluate(df_expr, variables) * SCALE_FACTOR; // raw y value
+
+                for (MathMatrix m : transformations) {
+                    double[] newPoint = LinearTransform.applyPointTransform(new double[]{x, y}, m);
+                    x = newPoint[0];
+                    y = newPoint[1];
+                }
+
+                x = centerX + x; // displayed x value (OTO)
+                y = centerY - y;
 
                 // draw lines
                 gc.setStroke(df_color); // color of line
