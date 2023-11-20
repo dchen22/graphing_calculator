@@ -21,10 +21,12 @@ public class GraphApp extends Application {
     final StaticVariableSet<Double> variables = new StaticVariableSet<>(); // stores static math variables
     private double SCALE_FACTOR = 50; // Initial scale factor
 
+    public static double SQ2 = Math.sqrt(2);
+
     public static void main(String[] args) {
         mathFunctions.add(new DrawableFunction("sin(x)", Color.BLACK, 3));
         mathFunctions.add(new DrawableFunction("x^2", Color.RED, 3));
-        transformations.add(LinearTransform.transform("rotate pi/4"));
+        transformations.add(LinearTransform.transform("reflect y=3x"));
         launch(args);
     }
 
@@ -78,6 +80,7 @@ public class GraphApp extends Application {
     }
 
     private void drawGraph(GraphicsContext gc, double width, double height) {
+        double ORIGIN_TO_CORNER = width / 2 * SQ2;
         // Clear the canvas
         gc.clearRect(0, 0, width, height);
 
@@ -102,7 +105,7 @@ public class GraphApp extends Application {
 
             // when drawing lines, we need a previous point (to the left) to be drawn to current point
             // we will start with the x coord immediately outside the range (-width - 1)
-            double lastX = -width / 2 - 1;
+            double lastX = -ORIGIN_TO_CORNER- 1;
 
             // Adjust the lastY calculation to consider scaling factor
             variables.set("x", lastX / SCALE_FACTOR); // set the x variable to our "previous" x
@@ -117,7 +120,8 @@ public class GraphApp extends Application {
             lastX = centerX + lastX; // OTO
             lastY = centerY - lastY; // OTO
 
-            for (int i = (int) (-width / 2); i < (int) (width / 2); i++) {
+            // multiply by sq2 to reach the corners if graph is rotated
+            for (int i = (int) (-ORIGIN_TO_CORNER); i < (int) (ORIGIN_TO_CORNER); i++) {
                 double x = (double) i; // x value
                 variables.set("x", x / SCALE_FACTOR); // set "x" variable to current x value
 

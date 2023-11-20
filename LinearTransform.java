@@ -18,7 +18,8 @@ public class LinearTransform {
      * Returns a transformation matrix based on given string description.
      * The following commands are available (#: number, W: variable):
      *
-     * rotate # deg, rotate #, reflect y=#x, stretch W by #, stretch W1 by #1 W2 by #2
+     * rotate # deg, rotate #, reflect y=#x, stretch W #, stretch W1 #1 W2 #2,
+     * project y=#x
      * @param transform String that describes the transformation (rotate 20 deg, reflect y=7x, stretch x by 4, etc.)
      * @return Corresponding MathMatrix that performs the transformation
      */
@@ -50,7 +51,7 @@ public class LinearTransform {
                 if (!(slope.isEmpty())) { // y=mx, no coefficient that must be evaluated
                     m = evaluator.evaluate(slope);
                 }
-                ; // slope
+
                 double m2 = Math.pow(m, 2); // slope squared (m^2)
                 double c = 1 / (m2 + 1); // coefficient 1 / (m^2 + 1)
                 return new MathMatrix(new double[][]{
@@ -62,11 +63,11 @@ public class LinearTransform {
                 stretchAmount.put("x", 1.0); // default value
                 stretchAmount.put("y", 1.0); // default value
 
-                stretchAmount.put(input[1], evaluator.evaluate(input[3])); // stretch W by #
+                stretchAmount.put(input[1], evaluator.evaluate(input[2])); // stretch W by #
 
                 // if there are 2 stretching coordinates
-                if (input.length == 7) { // stretch W1 by #1 W2 by #2
-                    stretchAmount.put(input[4], evaluator.evaluate(input[6]));
+                if (input.length == 7) { // stretch W1 #1 W2 #2
+                    stretchAmount.put(input[3], evaluator.evaluate(input[4]));
                 }
 
 
@@ -74,7 +75,20 @@ public class LinearTransform {
                         {stretchAmount.get("x"), 0},
                         {0, stretchAmount.get("y")}
                 });
+            case "project":
+                slope = input[1].substring(2, input[1].length() - 1);
+                System.out.println(slope);
+                m = 1; // default value; y=x with no explicit coefficient
+                if (!(slope.isEmpty())) { // y=mx, no coefficient that must be evaluated
+                    m = evaluator.evaluate(slope);
+                }
 
+                m2 = Math.pow(m, 2); // slope squared (m^2)
+                c = 1 / (m2 + 1); // coefficient 1 / (m^2 + 1)
+                return new MathMatrix(new double[][]{
+                        {c, c*m},
+                        {c*m, c*m2}
+                });
         }
         return null;
     }

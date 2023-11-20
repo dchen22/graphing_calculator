@@ -1,6 +1,7 @@
 public class MathMatrix {
     private int size;
     private double[][] entries;
+    private double det;
 
     public MathMatrix(double[][] entries) {
         // check if it's a square matrix
@@ -13,6 +14,7 @@ public class MathMatrix {
             this.size = entries.length;
             this.entries = entries;
         }
+        this.det = this.entries[1][1]*this.entries[0][0] - this.entries[0][1]*this.entries[1][0];
     }
 
     private boolean validMatrix(int actualSize, double[][] entries) {
@@ -31,4 +33,10 @@ public class MathMatrix {
     public int getSize() { return this.size; }
 
     public double[][] getArray() { return this.entries; }
+
+    /**
+     * Return determinant of this MathMatrix
+     * @return Determinant
+     */
+    public double getDet() { return this.det; }
 }
