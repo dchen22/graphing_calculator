@@ -80,7 +80,10 @@ public class GraphApp extends Application {
     }
 
     private void drawGraph(GraphicsContext gc, double width, double height) {
-        double ORIGIN_TO_CORNER = width / 2 * SQ2;
+        double ORIGIN_TO_CORNER = width / 2 * SQ2; // distance from origin to the corners
+        // normally, distance of x axis in either direction is width / 2, but if we rotate the graph by
+        // 45 degs then we need the graph to be able to reach the corners
+
         // Clear the canvas
         gc.clearRect(0, 0, width, height);
 
