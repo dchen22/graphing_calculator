@@ -46,7 +46,6 @@ public class LinearTransform {
                 // input[1] must be in the form y=mx for some real number m
                 // take substring from after character y to before x
                 String slope = input[1].substring(2, input[1].length() - 1);
-                System.out.println(slope);
                 double m = 1; // default value; y=x with no explicit coefficient
                 if (!(slope.isEmpty())) { // y=mx, no coefficient that must be evaluated
                     m = evaluator.evaluate(slope);
@@ -77,7 +76,6 @@ public class LinearTransform {
                 });
             case "project":
                 slope = input[1].substring(2, input[1].length() - 1);
-                System.out.println(slope);
                 m = 1; // default value; y=x with no explicit coefficient
                 if (!(slope.isEmpty())) { // y=mx, no coefficient that must be evaluated
                     m = evaluator.evaluate(slope);
